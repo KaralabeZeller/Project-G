@@ -1,0 +1,2 @@
+# keep directory, but not .gitkeep file
+!/**/.gitkeep
