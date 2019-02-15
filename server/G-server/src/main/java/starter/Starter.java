@@ -16,7 +16,7 @@ import util.log.GLogger;
  * - DB: 				Postgres specific features
  * - UPDATE: 			Makes sure clients has the newest version of the game
  * - AUTHENTICATION: 	Handles user authentication and game creation
- * - GAME:				Busoness logic game handling
+ * - GAME:				Business logic game handling
  */
 public class Starter {
 	
