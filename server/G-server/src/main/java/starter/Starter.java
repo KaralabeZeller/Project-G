@@ -1,12 +1,10 @@
 package starter;
 
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import common.GException;
+import common.constants.Modules;
+import common.log.GLogger;
+import db.Db;
 import network.Network;
-import util.constants.Modules;
-import util.log.GLogger;
 
 
 /**
@@ -22,25 +20,36 @@ public class Starter {
 	
 	private static GLogger logger;
 	private static Network net;
+	private static Db db;
 	
 	public static void main(String[] args) {
 		
 		logger = new GLogger(true);
 	
 		
-		logger.info(Modules.NETWORK, "Starting...");
-		
+		GLogger.info(Modules.STARTER, "NEtWORK 		[Starting]");
 		// Start NETWORK component
 		try {
 			net = new Network();
-		} catch (Exception e) {
-			
-			e.printStackTrace();
+		} catch (GException e) {
+			GLogger.info(Modules.STARTER, "NEtWORK 		[Failed] - " + e.getMessage() + " - " + e.getCode());
+			System.exit(1);
 		}
+		
+		GLogger.info(Modules.STARTER, "NEtWORK 		[Started]");
 		// Start DISPATCH component
 		
-		// Start DB component
+		GLogger.info(Modules.STARTER, "DB 			[Starting]");
 		
+		// Start DB component
+		try {
+			db = new Db();
+		} catch (GException e) {	
+			GLogger.info(Modules.STARTER, "DB 			[Failed] - " + e.getMessage() + " - " + e.getCode());
+			System.exit(1);
+		}
+		
+		GLogger.info(Modules.STARTER, "DB 			[Started]");
 		// Start UPDATE component
 		
 		// Start GAME component

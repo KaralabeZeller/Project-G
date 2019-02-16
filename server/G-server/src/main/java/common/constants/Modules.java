@@ -1,4 +1,4 @@
-package util.constants;
+package common.constants;
 
 /**
  * Defines constant variables to map static int to module names

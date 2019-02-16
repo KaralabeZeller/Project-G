@@ -1,4 +1,4 @@
-package util.log;
+package common.log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,7 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import util.constants.*;
+
+import common.constants.*;
 
 
 public class GLogFiles {
@@ -44,25 +45,25 @@ public class GLogFiles {
 		try {
 			switch(module) {
 				case Modules.STARTER: 			files.add(new FileWriter(getUniqueFilename("starter")));
-												writers.add(new PrintWriter(files.get(module)));	
+												writers.add(new PrintWriter(files.get(module), true));	
 												break;
 				case Modules.NETWORK: 			files.add(new FileWriter(getUniqueFilename("network")));
-												writers.add(new PrintWriter(files.get(module)));
+												writers.add(new PrintWriter(files.get(module), true));
 												break;
 				case Modules.DB:				files.add(new FileWriter(getUniqueFilename("db")));
-												writers.add(new PrintWriter(files.get(module)));
+												writers.add(new PrintWriter(files.get(module), true));
 												break;	
 				case Modules.AUTHENTICATION: 	files.add(new FileWriter(getUniqueFilename("auth")));
-												writers.add(new PrintWriter(files.get(module)));
+												writers.add(new PrintWriter(files.get(module), true));
 												break;
 				case Modules.DISPATCHER: 		files.add(new FileWriter(getUniqueFilename("dispatch")));
-												writers.add(new PrintWriter(files.get(module)));
+												writers.add(new PrintWriter(files.get(module), true));
 												break;
 				case Modules.UPDATE: 			files.add(new FileWriter(getUniqueFilename("update")));
-												writers.add(new PrintWriter(files.get(module)));
+												writers.add(new PrintWriter(files.get(module), true));
 												break;
 				case Modules.GAME: 				files.add(new FileWriter(getUniqueFilename("game")));
-												writers.add(new PrintWriter(files.get(module)));
+												writers.add(new PrintWriter(files.get(module), true));
 												break;
 					
 			}
@@ -94,8 +95,7 @@ public class GLogFiles {
 	
 	public void writelog(int module, String message) {
 		PrintWriter pw = writers.get(module);
-		pw.write(message);
-		pw.flush();
+		pw.println(message);
 	}
 	
 

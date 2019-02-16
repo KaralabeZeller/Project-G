@@ -1,10 +1,14 @@
 package network;
 
-import util.GException;
+import common.GException;
+import common.constants.Modules;
+import common.log.GLogger;
 
 public class Network {
 	
-	public Network() throws Exception {
-		throw new GException("Not yet implemebted!", "NET-001");
+	public Network() throws GException {
+		GLogger.info(Modules.NETWORK, "Starting...");
+		new Thread(new Server()).start();
+		return;
 	}
 }

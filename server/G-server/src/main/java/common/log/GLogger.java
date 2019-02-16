@@ -1,4 +1,4 @@
-package util.log;
+package common.log;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import util.constants.Modules;
+import common.constants.Modules;
 
 /**
  * Logging class to separate modules into specific log files
@@ -103,7 +103,7 @@ public final class GLogger {
 			break;
 				case Modules.DISPATCHER: System.out.println("DISPATCHER - " + message);
 			break;
-				case Modules.GAME: System.out.println("GAME" + message);
+				case Modules.GAME: System.out.println("GAME - " + message);
 			break;
 				case Modules.UPDATE: System.out.println("UPDATE - " + message);
 			break;
