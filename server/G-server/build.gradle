@@ -22,6 +22,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.1'
+    compile 'org.json:json:20171018'
 }
 
 // In this section you declare where to find the dependencies of your project

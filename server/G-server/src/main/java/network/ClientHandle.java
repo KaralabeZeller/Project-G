@@ -7,17 +7,20 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import common.constants.Modules;
 import common.log.GLogger;
+import dispatcher.Dispatcher;
 
 public class ClientHandle implements Runnable {
 
     InputStream is = null;
-    OutputStream os = null;
     InputStreamReader isr = null;
     BufferedReader br = null;
-    PrintWriter pw = null;
     boolean isDone = false;
 
     Socket threadSocket = null;
@@ -29,27 +32,30 @@ public class ClientHandle implements Runnable {
     }
 
     @Override
-    public void run() {
+    public void run()  {
 
         try {
             is = threadSocket.getInputStream();
             isr = new InputStreamReader(is);
             br = new BufferedReader(isr);
 
-            os = threadSocket.getOutputStream();
-            pw = new PrintWriter(os, true);
-
             String line = new String();
             GLogger.debug(Modules.NETWORK, "Waiting for client {" + threadSocket.getInetAddress() + "}");
             
             while ((!isDone) && (line = br.readLine()) != null) {
             	GLogger.debug(Modules.NETWORK, "Read from client {" + threadSocket.getInetAddress() + "} - " + line);
-                if(line.equals("test")) {
-
-                	GLogger.debug(Modules.NETWORK, "Answer to client {" + threadSocket.getInetAddress() + "} - Test-back");
-                	Thread tx = new Thread(new ReplyToClient("Test-back",this.threadSocket));
+            	JSONObject request = null;
+            	try {
+            		 request = new JSONObject(line);
+            	}catch(JSONException ex) {
+            		GLogger.error(Modules.NETWORK, "Failed to decode JSON message: " + line);
+            	}
+            	
+            	if(request != null) {
+            		JSONObject response = Dispatcher.messageFromNetwork(request);
+            		Thread tx = new Thread(new ReplyToClient(response,this.threadSocket));
                 	tx.start();
-                }
+            	}
 
                 if (line.equalsIgnoreCase("BYE")) {
 
@@ -58,10 +64,9 @@ public class ClientHandle implements Runnable {
 
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
 
             GLogger.error(Modules.NETWORK, "IO Exception during client communication");
-            e.printStackTrace();
         } finally {
 
                 try {
@@ -69,7 +74,6 @@ public class ClientHandle implements Runnable {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-                pw.close();
                 
                 ClientStore.removeClient(threadSocket);
                 try {

@@ -1,7 +1,9 @@
 package dispatcher;
 
+import org.json.JSONObject;
+
+import authentication.Auth;
 import common.Message;
-import common.constants.Msg;
 
 public final class Dispatcher {
 	
@@ -10,10 +12,11 @@ public final class Dispatcher {
 		
 	}
 	
-	public static void messageFromNetwork(Message message) {
-		switch(message.messageType) {
-			case Msg.TO_AUTH: messageToAuth(message);
+	public static JSONObject messageFromNetwork(JSONObject json) {
+		if(json.getString("type").equals("auth")) {
+			json = Auth.processRequest(json);
 		}
+		return json;
 	}
 
 	private static void messageToAuth(Message message) {
