@@ -14,7 +14,7 @@ import common.constants.Modules;
  * - DISPATCH: 			logs/dispatch_yyyy_mm_dd_nnn.log
  * - DB: 				logs/db_yyyy_mm_dd_nnn.log
  * - UPDATE: 			logs/update_yyyy_mm_dd_nnn.log
- * - AUTHENTICATION: 	logs/authentication_yyyy_mm_dd_nnn.log
+ * - UM:			 	logs/um_yyyy_mm_dd_nnn.log
  * - STARTER: 			logs/starter_yyyy_mm_dd_nnn.log
  * - GAME: 				logs/game_yyyy_mm_dd_nnn.log
  * 
@@ -23,6 +23,8 @@ import common.constants.Modules;
  *  - 2:	WARNING
  *  - 3:	ERROR
  *  - 4: 	DEBUG
+ *  
+ *  TODO: Set filter for log severity
  */
 public final class GLogger {
 	
@@ -31,6 +33,10 @@ public final class GLogger {
 	static GLogFiles logFiles;
 	BufferedWriter writer;
 	
+	/**
+	 * Initializes the GLogFiles object and if whether all log messages should be displayed on the UI
+	 * @param consoleOut Set it to true if you want to display log messages in the stdout
+	 */
 	public GLogger(boolean consoleOut) {
 		this.consoleOut = consoleOut;
 		logFiles = new GLogFiles();
@@ -90,15 +96,21 @@ public final class GLogger {
 		writeToConsole(module, message);
 	}
 	
+	/**
+	 * Writes the incoming log messages to the console if the boolean is set in the constructor
+	 * 
+	 * @param module The number of the module to be logged
+	 * @param message The full message to be logged
+	 */
 	private static void writeToConsole(int module, String message) {
 		if(!consoleOut)
 			return;
 		
 		switch(module) {
-			case Modules.STARTER: System.out.println("STARTER - " + message);
-				break;
-			case Modules.DB: System.out.println("DB - " + message);
-				break;
+				case Modules.STARTER: System.out.println("STARTER - " + message);
+			break;
+				case Modules.DB: System.out.println("DB - " + message);
+			break;
 				case Modules.NETWORK: System.out.println("NETWORK - " + message);
 			break;
 				case Modules.DISPATCHER: System.out.println("DISPATCHER - " + message);
@@ -107,7 +119,7 @@ public final class GLogger {
 			break;
 				case Modules.UPDATE: System.out.println("UPDATE - " + message);
 			break;
-				case Modules.AUTHENTICATION: System.out.println("AUTHENTICATION - " + message);
+				case Modules.UM: System.out.println("UM - " + message);
 			break;
 		
 		}

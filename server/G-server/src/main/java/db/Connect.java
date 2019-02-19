@@ -5,6 +5,11 @@ import java.sql.*;
 import common.constants.Modules;
 import common.log.GLogger;
 
+/**
+ * 
+ * Handles the Postgres conenction as a static object
+ *
+ */
 public final class Connect {
 	
 	public static Connection connection = null;
@@ -13,7 +18,11 @@ public final class Connect {
 	private void Connect() {
 		
 	}
-	
+	/**
+	 * Checks if the connection has been initialized or not. If not creates a new connection. 
+	 * 
+	 * @return A Connection object as a singleton
+	 */
 	public Connection getConnection() {
 		if(connection == null) {
 			GLogger.info(Modules.DB, "Connecting to Project-G DB..");

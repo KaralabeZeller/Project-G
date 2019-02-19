@@ -1,5 +1,10 @@
 package common;
 
+/**
+ * 
+ * Custom exception class to handle error messages and error codes
+ *
+ */
 public class GException extends Exception {
 	
 	private final String code;

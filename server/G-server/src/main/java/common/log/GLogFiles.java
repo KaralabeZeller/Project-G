@@ -13,14 +13,26 @@ import java.util.List;
 
 import common.constants.*;
 
-
+/**
+ * 
+ * @author KaralabeZeller
+ * 
+ * <p>Creates a list of files and file handlers to be able to sort the incoming log messages
+ * Logs are sorted acct. the Modules, which references the Modules class 
+ * 
+ * If a new component is added to the server, this class must be modified, to be able to log it
+ * </p>
+ */
 public class GLogFiles {
 
 	List<FileWriter> files;
 	List<PrintWriter> writers;
 	String date;
 	
-
+	/**
+	 * Initializes  the file and file handler lists
+	 * Queries the current date, which will be added to the filename
+	 */
 	public GLogFiles () {
 		files = new LinkedList<FileWriter>();
 		writers = new LinkedList<PrintWriter>();
@@ -34,13 +46,20 @@ public class GLogFiles {
 		initFiles();
 	}
 
+	/**
+	 * Helper function to fill the lists
+	 */
 	private void initFiles() {
 		for(int module = 0; module < Modules.NUM_OF_MODULES; module++) {
 			addFile(module);
 		}
 			
 	}
-
+	
+	/**
+	 * Creates new file and file handler, which is then added to the list
+	 * @param module The number of the module to create the filename
+	 */
 	private void addFile(int module) {
 		try {
 			switch(module) {
@@ -53,7 +72,7 @@ public class GLogFiles {
 				case Modules.DB:				files.add(new FileWriter(getUniqueFilename("db")));
 												writers.add(new PrintWriter(files.get(module), true));
 												break;	
-				case Modules.AUTHENTICATION: 	files.add(new FileWriter(getUniqueFilename("auth")));
+				case Modules.UM:			 	files.add(new FileWriter(getUniqueFilename("um")));
 												writers.add(new PrintWriter(files.get(module), true));
 												break;
 				case Modules.DISPATCHER: 		files.add(new FileWriter(getUniqueFilename("dispatch")));
@@ -73,7 +92,13 @@ public class GLogFiles {
 		
 	}
 
-
+    /**
+     * Creates a unique filename pased on the prefix parameter, the current date and a unique autoincrement sequence
+     * mask: <prefix>_yyyy_mm_dd_seq(3).log
+     * 
+     * @param prefix String representation of the module, which is the prefix of the log file
+     * @return the unique filename
+     */
 	private String getUniqueFilename(String prefix) {
 		int seq = 1;
 		String seq_string = String.format("%03d", seq);
@@ -92,7 +117,12 @@ public class GLogFiles {
 		
 	}
 	
-	
+	/**
+	 * Writes the message from the parameter to the log file designated by the moduel
+	 * 
+	 * @param module The number of the module, which file will be updated
+	 * @param message The message to be written into the logfile
+	 */
 	public void writelog(int module, String message) {
 		PrintWriter pw = writers.get(module);
 		pw.println(message);

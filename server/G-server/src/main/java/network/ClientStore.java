@@ -8,53 +8,49 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import common.Client;
+import common.User;
+import common.Users;
 import common.constants.Modules;
 import common.log.GLogger;
 
+/**
+ * 
+ * Stores the active clients
+ *
+ */
 public final class ClientStore {
-	static List<Client> activeClients = new ArrayList<Client>();
+	private static Users users;
 	
-	public static Socket getSocketById(long id) {
-		Socket socket = null;
-		
-		for(Client client : activeClients ) {
-			if(client.getId() == id)
-				socket = client.getSocket();
-		}
-		return socket;
+	public ClientStore() {
+		users = new Users();
 	}
 	
+	/**
+	 * Adds client to the store
+	 * 
+	 * @param serverSocket Socket of the server
+	 * @return the Socket of the accepted client
+	 */
 	public static Socket addClient(ServerSocket serverSocket) {
-		Client client = null;
+		User user = null;
 		try {
-			client = new Client(serverSocket.accept());
+			user = new User(serverSocket.accept());
 		} catch (IOException e) {
 			GLogger.error(Modules.NETWORK, "Failed to accept client");
 			e.printStackTrace();
 		}
-		activeClients.add(client);
-		GLogger.debug(Modules.NETWORK, "Created new client socket: " + client.getSocket().getInetAddress());
-		return client.getSocket();
+		
+		users.addUser(user);
+		GLogger.debug(Modules.NETWORK, "Created new client socket: " + user.getSocket().toString());
+		return user.getSocket();
+		
 	}
 	
-	public static void updateClient(Socket socket, String user, long id) {
-		for(Client client : activeClients ) {
-			if(client.getSocket().getInetAddress().equals(socket.getInetAddress())) {
-				client.setUserName(user);
-				client.setId(id);
-			}
-		}
-	}
-	
+	/**
+	 * Remoes the client from the list after it disconnects
+	 * @param socket The socket of the client
+	 */
 	public static void removeClient(Socket socket) {
-		for (Iterator<Client> it = activeClients.iterator(); it.hasNext(); ) {
-			Client client = it.next();
-			if(client.getSocket().getInetAddress().equals(socket.getInetAddress())) {
-				it.remove();
-				GLogger.info(Modules.NETWORK, "Removed client: " + client.getSocket().getInetAddress());
-				break;
-			}
-		}
+		users.removeUser(socket);
 	}
 }
